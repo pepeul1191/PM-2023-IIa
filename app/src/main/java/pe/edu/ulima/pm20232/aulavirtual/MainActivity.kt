@@ -10,34 +10,31 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import pe.edu.ulima.pm20232.aulavirtual.screens.SplashScreen
 import pe.edu.ulima.pm20232.aulavirtual.ui.theme.AulaVirtualTheme
+import androidx.navigation.compose.rememberNavController
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AulaVirtualTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    Greeting("Android")
+            val navController = rememberNavController()
+
+            NavHost(navController, startDestination = "splash") {
+                composable("splash") {
+                    SplashScreen {
+                        navController.navigate("main")
+                    }
+                }
+                composable("main") {
+                    // Replace with your main screen Composable
+                    Text("Home")
                 }
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    AulaVirtualTheme {
-        Greeting("Android")
-    }
-}
