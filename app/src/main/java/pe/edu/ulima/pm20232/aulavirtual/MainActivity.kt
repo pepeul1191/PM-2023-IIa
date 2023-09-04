@@ -20,6 +20,7 @@ import androidx.navigation.compose.rememberNavController
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AulaVirtualTheme {
         setContent {
             val navController = rememberNavController()
 
@@ -34,6 +35,7 @@ class MainActivity : ComponentActivity() {
                     Text("Home")
                 }
             }
+        }
         }
     }
 }
