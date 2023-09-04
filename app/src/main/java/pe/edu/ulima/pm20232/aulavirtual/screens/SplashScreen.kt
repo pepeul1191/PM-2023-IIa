@@ -71,7 +71,7 @@ fun SplashScreen(navigateToMain: () -> Unit
 
     // Simulate a delay and then navigate to the main screen
     LaunchedEffect(Unit) {
-        delay(5000) // Adjust the delay duration as needed
+        delay(1000) // Adjust the delay duration as needed
         navigateToMain()
     }
 }
