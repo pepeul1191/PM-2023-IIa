@@ -14,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import pe.edu.ulima.pm20232.aulavirtual.screens.LoginScreen
+import pe.edu.ulima.pm20232.aulavirtual.screens.ProfileScreen
 import pe.edu.ulima.pm20232.aulavirtual.screens.SplashScreen
 import pe.edu.ulima.pm20232.aulavirtual.ui.theme.AulaVirtualTheme
 
@@ -37,7 +38,8 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("main") {
                             // Replace with your main screen Composable
-                            LoginScreen()
+                            // LoginScreen()
+                            ProfileScreen()
                         }
                     }
                 }
