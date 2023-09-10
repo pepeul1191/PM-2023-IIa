@@ -1,5 +1,6 @@
 package pe.edu.ulima.pm20232.aulavirtual.screens
 
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -24,83 +25,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import pe.edu.ulima.pm20232.aulavirtual.R
+import pe.edu.ulima.pm20232.aulavirtual.components.ButtonWithIcon
+import pe.edu.ulima.pm20232.aulavirtual.components.TextFieldWithLeadingIcon
+import pe.edu.ulima.pm20232.aulavirtual.screenmodels.LoginScreenViewModel
 import pe.edu.ulima.pm20232.aulavirtual.ui.theme.*
 import androidx.compose.material.Text as Text1
-
-@Composable
-fun ButtonWithIcon(
-    text: String,
-    icon: ImageVector,
-    onClick: () -> Unit
-) {
-    Button(
-        onClick = { onClick() },
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(55.dp),
-        colors = ButtonDefaults.buttonColors(
-            backgroundColor = Orange400, // Button background color
-            contentColor = Color.White // Text and icon color
-        ),
-        contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 20.dp),
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                modifier = Modifier.size(32.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text1(text = text)
-        }
-    }
-}
-
-@Composable
-fun TextFieldWithLeadingIcon(
-    leadingIcon: ImageVector,
-    placeholder: String,
-    text: String,
-    onTextChanged: (String) -> Unit
-) {
-    var isFocused by remember { mutableStateOf(false) }
-    val borderColor = if (isFocused) Color.Blue else Color.Gray
-
-    TextField(
-        modifier = Modifier
-            .fillMaxWidth()
-            //.border(1.dp, borderColor)
-            .padding(5.dp)
-            .background(color = Color.Transparent)
-            ,
-        value = text,
-        onValueChange = {
-            onTextChanged(it)
-        },
-        placeholder = {
-            Text1(text = placeholder, fontSize = 16.sp)
-        },
-        singleLine = true,
-        colors = TextFieldDefaults.textFieldColors(
-             backgroundColor = Color.White,
-            focusedIndicatorColor = Color.LightGray,
-            unfocusedIndicatorColor = Orange800
-        ),
-        leadingIcon = {
-            Icon(
-                imageVector = leadingIcon,
-                contentDescription = null,
-                tint = (if (isSystemInDarkTheme()) White400 else Orange400),
-                modifier = Modifier
-                    .padding(4.dp)
-                    .size(24.dp)
-                    .clickable { /* Handle icon click if needed */ }
-            )
-        },
-    )
-}
 
 @Composable
 fun topScreen(){
@@ -113,7 +42,7 @@ fun topScreen(){
                 .padding(8.dp),
             contentAlignment = Alignment.TopCenter
         ) {
-            val paddingPercentage = 60;
+            val paddingPercentage = 80;
             val paddingValue = with(LocalDensity.current) {
                 (paddingPercentage * 0.02f * 16.dp.toPx()).dp
             }
@@ -146,7 +75,7 @@ fun topScreen(){
 }
 
 @Composable
-fun loginForm(screenWidthDp: Int, screenHeightDp: Int){
+fun loginForm(screenWidthDp: Int, screenHeightDp: Int, viewModel: LoginScreenViewModel){
     Box( // caja gris (light)
         modifier = Modifier
             .fillMaxSize()
@@ -180,18 +109,21 @@ fun loginForm(screenWidthDp: Int, screenHeightDp: Int){
                     TextFieldWithLeadingIcon(
                         leadingIcon = Icons.Default.Person, // Replace with your desired icon
                         placeholder = "Usuario",
-                        text = "",
+                        text = viewModel.user,
                         onTextChanged = {
-                            println(it)
+                            println("+++++++++++++++++++++++++++++++")
+                            viewModel.user = it
+                            println(viewModel.user)
                         }
                     )
                     TextFieldWithLeadingIcon(
                         leadingIcon = Icons.Default.Lock, // Replace with your desired icon
+                        text = viewModel.password,
                         placeholder = "Contraseña",
-                        text = "",
                         onTextChanged = {
-                            println(it)
-                        }
+                            viewModel.password = it
+                        },
+                        isPassword = true,
                     )
                     Row(
                         modifier = Modifier
@@ -199,7 +131,9 @@ fun loginForm(screenWidthDp: Int, screenHeightDp: Int){
                             .padding(top = 25.dp),
                         horizontalArrangement = Arrangement.Center,
                     ){
-                        ButtonWithIcon("INGRESAR", Icons.Default.Person, {})
+                        ButtonWithIcon("INGRESAR", Icons.Default.Person, {
+                            viewModel.access()
+                        })
                     }
                 }
             }
@@ -223,12 +157,11 @@ fun goToReset(){
 }
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(viewModel: LoginScreenViewModel) {
     val configuration = LocalConfiguration.current
     val screenWidthDp = configuration.screenWidthDp
     val screenHeightDp = configuration.screenHeightDp
-
     topScreen()
-    loginForm(screenWidthDp, screenHeightDp)
+    loginForm(screenWidthDp, screenHeightDp, viewModel)
     goToReset()
 }

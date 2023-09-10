@@ -29,14 +29,14 @@ fun ImageView(url: String, height: Int, width: Int) {
 
 @Composable
 fun ProfileScreen(){
-    val imageUrl = "https://oliva.ulima.edu.pe/imagenes/fotos/49502.jpg" // Replace with your image URL
+    val imageUrl = "https://s.hs-data.com/bilder/spieler/gross/17450.jpg?fallback=png" // Replace with your image URL
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(100.dp),
         verticalAlignment = Alignment.CenterVertically
     ){
-        ImageView(url = imageUrl, width = 100, height = 100)
+        ImageView(url = imageUrl, width = 50, height = 50)
         Column() {
             Text("Nombre y Apellido")
             Text("Código")

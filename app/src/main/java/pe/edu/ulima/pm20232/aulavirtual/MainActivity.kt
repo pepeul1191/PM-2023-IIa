@@ -1,8 +1,10 @@
 package pe.edu.ulima.pm20232.aulavirtual
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -13,12 +15,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import pe.edu.ulima.pm20232.aulavirtual.screenmodels.LoginScreenViewModel
 import pe.edu.ulima.pm20232.aulavirtual.screens.LoginScreen
 import pe.edu.ulima.pm20232.aulavirtual.screens.ProfileScreen
+import pe.edu.ulima.pm20232.aulavirtual.screens.ResetPasswordScreen
 import pe.edu.ulima.pm20232.aulavirtual.screens.SplashScreen
 import pe.edu.ulima.pm20232.aulavirtual.ui.theme.AulaVirtualTheme
 
 class MainActivity : ComponentActivity() {
+    private val loginScrennViewModel by viewModels<LoginScreenViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -38,8 +44,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("main") {
                             // Replace with your main screen Composable
-                            // LoginScreen()
-                            ProfileScreen()
+                            LoginScreen(loginScrennViewModel)
+                            // ProfileScreen()
+                            // ResetPasswordScreen()
                         }
                     }
                 }
