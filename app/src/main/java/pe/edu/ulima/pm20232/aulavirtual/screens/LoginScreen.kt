@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import pe.edu.ulima.pm20232.aulavirtual.R
 import pe.edu.ulima.pm20232.aulavirtual.components.ButtonWithIcon
+import pe.edu.ulima.pm20232.aulavirtual.components.CheckboxWithLabel
 import pe.edu.ulima.pm20232.aulavirtual.components.TextFieldWithLeadingIcon
 import pe.edu.ulima.pm20232.aulavirtual.screenmodels.LoginScreenViewModel
 import pe.edu.ulima.pm20232.aulavirtual.ui.theme.*
@@ -76,6 +77,9 @@ fun topScreen(){
 
 @Composable
 fun loginForm(screenWidthDp: Int, screenHeightDp: Int, viewModel: LoginScreenViewModel){
+    var isChecked by remember { mutableStateOf(false) }
+    var termsDisabled = true
+
     Box( // caja gris (light)
         modifier = Modifier
             .fillMaxSize()
@@ -90,7 +94,7 @@ fun loginForm(screenWidthDp: Int, screenHeightDp: Int, viewModel: LoginScreenVie
                 modifier = Modifier
                     .size(
                         (screenWidthDp * 0.75).dp,
-                        (screenHeightDp * 0.35).dp
+                        (screenHeightDp * 0.45).dp
                     ) // Adjust the size as needed
                     //.border(1.dp, Gray800)
                     .background(White400)
@@ -111,9 +115,7 @@ fun loginForm(screenWidthDp: Int, screenHeightDp: Int, viewModel: LoginScreenVie
                         placeholder = "Usuario",
                         text = viewModel.user,
                         onTextChanged = {
-                            println("+++++++++++++++++++++++++++++++")
                             viewModel.user = it
-                            println(viewModel.user)
                         }
                     )
                     TextFieldWithLeadingIcon(
@@ -135,6 +137,19 @@ fun loginForm(screenWidthDp: Int, screenHeightDp: Int, viewModel: LoginScreenVie
                             viewModel.access()
                         })
                     }
+                    CheckboxWithLabel(
+                        label = "Términos y Condiciones",
+                        isChecked = isChecked,
+                        onCheckedChange = {
+                            isChecked = it
+                        },
+                        onClick = {
+                            if(!termsDisabled){
+                                isChecked = !isChecked
+                            }
+                        },
+                        disabled = termsDisabled,
+                    )
                 }
             }
         }

@@ -25,7 +25,7 @@ import pe.edu.ulima.pm20232.aulavirtual.ui.theme.White400
 
 @Composable
 fun TextFieldWithLeadingIcon(
-    leadingIcon: ImageVector,
+    leadingIcon: ImageVector? = null,
     isPassword: Boolean? = false,
     placeholder: String,
     text: String,
@@ -33,38 +33,63 @@ fun TextFieldWithLeadingIcon(
 ) {
     var isFocused by remember { mutableStateOf(false) }
     val borderColor = if (isFocused) Color.Blue else Color.Gray
-
-    TextField(
-        modifier = Modifier
-            .fillMaxWidth()
-            //.border(1.dp, borderColor)
-            .padding(5.dp)
-            .background(color = Color.Transparent)
-        ,
-        value = text,
-        onValueChange = {
-            onTextChanged(it)
-        },
-        placeholder = {
-            Text(text = placeholder, fontSize = 16.sp)
-        },
-        singleLine = true,
-        colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = Color.White,
-            focusedIndicatorColor = Color.LightGray,
-            unfocusedIndicatorColor = Orange800
-        ),
-        visualTransformation = if (isPassword == false) VisualTransformation.None else PasswordVisualTransformation(),
-        leadingIcon = {
-            Icon(
-                imageVector = leadingIcon,
-                contentDescription = null,
-                tint = (if (isSystemInDarkTheme()) White400 else Orange400),
-                modifier = Modifier
-                    .padding(4.dp)
-                    .size(24.dp)
-                    .clickable { /* Handle icon click if needed */ }
-            )
-        },
-    )
+    if (leadingIcon != null){
+        TextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                //.border(1.dp, borderColor)
+                .padding(5.dp)
+                .background(color = Color.Transparent)
+            ,
+            value = text,
+            onValueChange = {
+                onTextChanged(it)
+            },
+            placeholder = {
+                Text(text = placeholder, fontSize = 16.sp)
+            },
+            singleLine = true,
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.White,
+                focusedIndicatorColor = Color.LightGray,
+                unfocusedIndicatorColor = Orange800
+            ),
+            visualTransformation = if (isPassword == false) VisualTransformation.None else PasswordVisualTransformation(),
+            leadingIcon = {
+                Icon(
+                    imageVector = leadingIcon,
+                    contentDescription = null,
+                    tint = (if (isSystemInDarkTheme()) White400 else Orange400),
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .size(24.dp)
+                        .clickable { /* Handle icon click if needed */ }
+                )
+            },
+        )
+    }else{
+        TextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                //.border(1.dp, borderColor)
+                .padding(5.dp)
+                .background(color = Color.Transparent)
+            ,
+            value = text,
+            onValueChange = {
+                onTextChanged(it)
+            },
+            placeholder = {
+                Text(text = placeholder, fontSize = 16.sp)
+            },
+            singleLine = true,
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.White,
+                focusedIndicatorColor = Color.LightGray,
+                unfocusedIndicatorColor = Orange800
+            ),
+            visualTransformation = if (isPassword == false) VisualTransformation.None else PasswordVisualTransformation(),
+            leadingIcon = null,
+        )
+    }
 }
