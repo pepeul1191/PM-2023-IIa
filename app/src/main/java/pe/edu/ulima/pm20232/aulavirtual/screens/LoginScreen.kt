@@ -1,5 +1,6 @@
 package pe.edu.ulima.pm20232.aulavirtual.screens
 
+import android.widget.ScrollView
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -24,6 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.mukesh.MarkDown
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -33,6 +35,7 @@ import pe.edu.ulima.pm20232.aulavirtual.components.CheckboxWithLabel
 import pe.edu.ulima.pm20232.aulavirtual.components.TextFieldWithLeadingIcon
 import pe.edu.ulima.pm20232.aulavirtual.screenmodels.LoginScreenViewModel
 import pe.edu.ulima.pm20232.aulavirtual.ui.theme.*
+import java.net.URL
 import androidx.compose.material.Text as Text1
 
 @Composable
@@ -179,18 +182,21 @@ fun LoginForm(
 fun TermsAndConditions(viewModel: LoginScreenViewModel, bottomSheetScaffoldState: BottomSheetScaffoldState){
     val coroutineScope = rememberCoroutineScope()
     Box(
-        Modifier.fillMaxWidth().height(500.dp).background(Color.White)
+        Modifier.fillMaxWidth().height(500.dp).background(Color.White).padding(top = 20.dp)
     ){
         Column(
-            Modifier.fillMaxSize(),
+            Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ){
-            Text1(text = "Hello i am a  bottomSheet")
+            MarkDown(
+                url = URL("https://raw.githubusercontent.com/mukeshsolanki/MarkdownView-Android/main/README.md"),
+                modifier = Modifier.fillMaxSize()
+            )
         }
     }
     Box(
-        Modifier.fillMaxWidth().height(100.dp).background(Color.White)
+        Modifier.fillMaxWidth().height(87.dp).background(Gray1200)
     ){
         Row(
             modifier = Modifier
