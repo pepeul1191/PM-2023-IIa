@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 class LoginScreenViewModel: ViewModel() {
     var user: String by mutableStateOf("")
     var password: String by mutableStateOf("")
+    var bottomSheetCollapse: Boolean by mutableStateOf(true)
 
     fun access(): Unit{
         println("BTN PRESSED")

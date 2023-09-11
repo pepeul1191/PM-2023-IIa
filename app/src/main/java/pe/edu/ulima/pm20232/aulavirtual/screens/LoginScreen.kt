@@ -24,6 +24,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import pe.edu.ulima.pm20232.aulavirtual.R
 import pe.edu.ulima.pm20232.aulavirtual.components.ButtonWithIcon
 import pe.edu.ulima.pm20232.aulavirtual.components.CheckboxWithLabel
@@ -75,8 +77,15 @@ fun topScreen(){
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun loginForm(screenWidthDp: Int, screenHeightDp: Int, viewModel: LoginScreenViewModel){
+fun loginForm(
+    screenWidthDp: Int,
+    screenHeightDp: Int,
+    viewModel: LoginScreenViewModel,
+    coroutineScope: CoroutineScope,
+    bottomSheetScaffoldState: BottomSheetScaffoldState
+){
     var isChecked by remember { mutableStateOf(false) }
     var termsDisabled = true
 
@@ -147,12 +156,49 @@ fun loginForm(screenWidthDp: Int, screenHeightDp: Int, viewModel: LoginScreenVie
                             if(!termsDisabled){
                                 isChecked = !isChecked
                             }
+                            coroutineScope.launch {
+                                if (bottomSheetScaffoldState.bottomSheetState.isCollapsed){
+                                    viewModel.bottomSheetCollapse = false
+                                    bottomSheetScaffoldState.bottomSheetState.expand()
+                                }else{
+                                    viewModel.bottomSheetCollapse = true
+                                    bottomSheetScaffoldState.bottomSheetState.collapse()
+                                }
+                            }
                         },
                         disabled = termsDisabled,
                     )
                 }
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun BottomSheet(screenWidthDp: Int, screenHeightDp: Int, viewModel: LoginScreenViewModel){
+    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed))
+    val coroutineScope = rememberCoroutineScope()
+    BottomSheetScaffold(
+        scaffoldState = bottomSheetScaffoldState,
+        sheetContent = {
+            Box(
+                Modifier.fillMaxWidth().height(600.dp).background(Color.Green)
+            ){
+                Column(
+                    Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ){
+                    Text1(text = "Hello i am a  bottomSheet")
+                }
+            }
+        },
+        sheetPeekHeight = 0.dp,
+        backgroundColor = Color.Transparent
+    ) {
+        loginForm(screenWidthDp, screenHeightDp, viewModel, coroutineScope, bottomSheetScaffoldState)
     }
 }
 
@@ -166,7 +212,16 @@ fun goToReset(){
     ){
         Row() {
             Text1(text = "Olvidó su contraseña? ", textAlign = TextAlign.End, color = Gray800, fontSize = 16.sp)
-            Text1(text = "Cambiala Aquí", textAlign = TextAlign.End, color = Orange400, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+            Text1(
+                text = "Cambiala Aquí",
+                textAlign = TextAlign.End,
+                color = Orange400,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.clickable {
+                    println("Cambiar Contraseña")
+                },
+            )
         }
     }
 }
@@ -177,6 +232,8 @@ fun LoginScreen(viewModel: LoginScreenViewModel) {
     val screenWidthDp = configuration.screenWidthDp
     val screenHeightDp = configuration.screenHeightDp
     topScreen()
-    loginForm(screenWidthDp, screenHeightDp, viewModel)
-    goToReset()
+    BottomSheet(screenWidthDp, screenHeightDp, viewModel)
+    if(viewModel.bottomSheetCollapse){
+        goToReset()
+    }
 }
