@@ -10,6 +10,7 @@ class LoginScreenViewModel: ViewModel() {
     var password: String by mutableStateOf("")
     var bottomSheetCollapse: Boolean by mutableStateOf(true)
 
+
     fun access(): Unit{
         println("BTN PRESSED")
         println(user)

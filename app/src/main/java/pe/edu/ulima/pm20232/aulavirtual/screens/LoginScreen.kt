@@ -1,20 +1,19 @@
 package pe.edu.ulima.pm20232.aulavirtual.screens
 
-import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -24,7 +23,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import pe.edu.ulima.pm20232.aulavirtual.R
 import pe.edu.ulima.pm20232.aulavirtual.components.ButtonWithIcon
@@ -35,7 +36,7 @@ import pe.edu.ulima.pm20232.aulavirtual.ui.theme.*
 import androidx.compose.material.Text as Text1
 
 @Composable
-fun topScreen(){
+fun TopScreen(){
     Column(modifier =Modifier.fillMaxSize()) {
         Box(
             modifier = Modifier
@@ -79,7 +80,7 @@ fun topScreen(){
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun loginForm(
+fun LoginForm(
     screenWidthDp: Int,
     screenHeightDp: Int,
     viewModel: LoginScreenViewModel,
@@ -176,34 +177,76 @@ fun loginForm(
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
+fun TermsAndConditions(viewModel: LoginScreenViewModel, bottomSheetScaffoldState: BottomSheetScaffoldState){
+    val coroutineScope = rememberCoroutineScope()
+    Box(
+        Modifier.fillMaxWidth().height(500.dp).background(Color.White)
+    ){
+        Column(
+            Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ){
+            Text1(text = "Hello i am a  bottomSheet")
+        }
+    }
+    Box(
+        Modifier.fillMaxWidth().height(100.dp).background(Color.White)
+    ){
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.Center, // Center horizontally
+        ){
+            Box(
+                modifier = Modifier
+                    .weight(1f).padding(start = 5.dp, end = 5.dp) // Equal weight for the first part
+            ) {
+                ButtonWithIcon(
+                    text = "Acepto", icon = Icons.Default.Check, onClick  = {
+                        coroutineScope.launch {
+                            viewModel.bottomSheetCollapse = true
+                            bottomSheetScaffoldState.bottomSheetState.collapse()
+                        }
+                    }, modifier = Modifier.height(55.dp).fillMaxWidth(), backgroundColor = Gray800)
+            }
+            Box(
+                modifier = Modifier
+                    .weight(1f).padding(start = 5.dp, end = 5.dp) // Equal weight for the second part
+            ) {
+                ButtonWithIcon("No Acpeto", Icons.Default.Delete, onClick = {
+                    coroutineScope.launch {
+                        viewModel.bottomSheetCollapse = true
+                        bottomSheetScaffoldState.bottomSheetState.collapse()
+                    }
+                }, modifier = Modifier.height(55.dp).fillMaxWidth(), backgroundColor = Gray800)
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
 fun BottomSheet(screenWidthDp: Int, screenHeightDp: Int, viewModel: LoginScreenViewModel){
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed))
+        bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
+    )
     val coroutineScope = rememberCoroutineScope()
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
         sheetContent = {
-            Box(
-                Modifier.fillMaxWidth().height(600.dp).background(Color.Green)
-            ){
-                Column(
-                    Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ){
-                    Text1(text = "Hello i am a  bottomSheet")
-                }
-            }
+            TermsAndConditions(viewModel, bottomSheetScaffoldState)
         },
         sheetPeekHeight = 0.dp,
         backgroundColor = Color.Transparent
     ) {
-        loginForm(screenWidthDp, screenHeightDp, viewModel, coroutineScope, bottomSheetScaffoldState)
+        LoginForm(screenWidthDp, screenHeightDp, viewModel, coroutineScope, bottomSheetScaffoldState)
     }
 }
 
 @Composable
-fun goToReset(){
+fun GoToReset(){
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -227,13 +270,13 @@ fun goToReset(){
 }
 
 @Composable
-fun LoginScreen(viewModel: LoginScreenViewModel) {
+fun LoginScreen(viewModel: LoginScreenViewModel, navController: NavHostController) {
     val configuration = LocalConfiguration.current
     val screenWidthDp = configuration.screenWidthDp
     val screenHeightDp = configuration.screenHeightDp
-    topScreen()
+    TopScreen()
     BottomSheet(screenWidthDp, screenHeightDp, viewModel)
     if(viewModel.bottomSheetCollapse){
-        goToReset()
+        GoToReset()
     }
 }

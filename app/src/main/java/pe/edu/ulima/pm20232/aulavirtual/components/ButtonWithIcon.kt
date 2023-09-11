@@ -17,15 +17,15 @@ import pe.edu.ulima.pm20232.aulavirtual.ui.theme.Orange400
 fun ButtonWithIcon(
     text: String,
     icon: ImageVector,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier? = Modifier.fillMaxWidth().height(55.dp),
+    backgroundColor: Color? = Orange400
 ) {
     Button(
         onClick = { onClick() },
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(55.dp),
+        modifier = modifier!!,
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = Orange400, // Button background color
+            backgroundColor = backgroundColor!!, // Button background color
             contentColor = Color.White // Text and icon color
         ),
         contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 20.dp),
