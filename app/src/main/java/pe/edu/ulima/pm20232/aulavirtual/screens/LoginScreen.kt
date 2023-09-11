@@ -87,7 +87,6 @@ fun LoginForm(
     coroutineScope: CoroutineScope,
     bottomSheetScaffoldState: BottomSheetScaffoldState
 ){
-    var isChecked by remember { mutableStateOf(false) }
     var termsDisabled = true
 
     Box( // caja gris (light)
@@ -149,13 +148,13 @@ fun LoginForm(
                     }
                     CheckboxWithLabel(
                         label = "Términos y Condiciones",
-                        isChecked = isChecked,
+                        isChecked = viewModel.termsAndConditionsChecked,
                         onCheckedChange = {
-                            isChecked = it
+                            viewModel.termsAndConditionsChecked = it
                         },
                         onClick = {
                             if(!termsDisabled){
-                                isChecked = !isChecked
+                                viewModel.termsAndConditionsChecked = !viewModel.termsAndConditionsChecked
                             }
                             coroutineScope.launch {
                                 if (bottomSheetScaffoldState.bottomSheetState.isCollapsed){
@@ -207,6 +206,7 @@ fun TermsAndConditions(viewModel: LoginScreenViewModel, bottomSheetScaffoldState
                     text = "Acepto", icon = Icons.Default.Check, onClick  = {
                         coroutineScope.launch {
                             viewModel.bottomSheetCollapse = true
+                            viewModel.termsAndConditionsChecked = true
                             bottomSheetScaffoldState.bottomSheetState.collapse()
                         }
                     }, modifier = Modifier.height(55.dp).fillMaxWidth(), backgroundColor = Gray800)
@@ -218,6 +218,7 @@ fun TermsAndConditions(viewModel: LoginScreenViewModel, bottomSheetScaffoldState
                 ButtonWithIcon("No Acpeto", Icons.Default.Delete, onClick = {
                     coroutineScope.launch {
                         viewModel.bottomSheetCollapse = true
+                        viewModel.termsAndConditionsChecked = false
                         bottomSheetScaffoldState.bottomSheetState.collapse()
                     }
                 }, modifier = Modifier.height(55.dp).fillMaxWidth(), backgroundColor = Gray800)
