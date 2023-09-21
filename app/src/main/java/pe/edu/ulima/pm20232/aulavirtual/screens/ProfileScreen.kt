@@ -8,10 +8,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import coil.transform.CircleCropTransformation
 import pe.edu.ulima.pm20232.aulavirtual.models.Pokemon
@@ -35,9 +36,10 @@ fun ImageView(url: String, height: Int, width: Int) {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PokemonsGrid(){
+fun PokemonsGrid(navController: NavController){
     val pokemonService: PokemonService = PokemonService()
     val pokemons: List<Pokemon> = pokemonService.pokemonList
+    var intValue by remember { mutableStateOf(0) }
     LazyVerticalGrid(
         cells = GridCells.Fixed(4) // Specify the number of columns
     ) {
@@ -50,7 +52,8 @@ fun PokemonsGrid(){
                     .padding(bottom = 10.dp)
                     .clickable {
                         Log.d("POKEMONS", pokemons[i].id.toString())
-                        //navController.navigate("/pokemon/edit?pokemon_id=${pokemons[i].id.toString()}")
+                        intValue = pokemons[i].id.toInt()
+                        navController.navigate("pokemon/edit?pokemon_id=${intValue}")
                     },
             )
         }
@@ -58,7 +61,7 @@ fun PokemonsGrid(){
 }
 
 @Composable
-fun ProfileScreen(){
+fun ProfileScreen(navController: NavController){
     val imageUrl = "https://pokefanaticos.com/pokedex/assets/images/pokemon_imagenes/25.png" // Replace with your image URL
     Row(
         modifier = Modifier
@@ -75,6 +78,6 @@ fun ProfileScreen(){
     Row(
         modifier = Modifier.fillMaxWidth().padding(top = 90.dp)
     ){
-        PokemonsGrid()
+        PokemonsGrid(navController)
     }
 }

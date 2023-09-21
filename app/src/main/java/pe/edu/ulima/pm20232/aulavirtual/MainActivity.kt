@@ -9,17 +9,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import pe.edu.ulima.pm20232.aulavirtual.screenmodels.LoginScreenViewModel
-import pe.edu.ulima.pm20232.aulavirtual.screens.LoginScreen
-import pe.edu.ulima.pm20232.aulavirtual.screens.ProfileScreen
-import pe.edu.ulima.pm20232.aulavirtual.screens.ResetPasswordScreen
-import pe.edu.ulima.pm20232.aulavirtual.screens.SplashScreen
+import pe.edu.ulima.pm20232.aulavirtual.screens.*
 import pe.edu.ulima.pm20232.aulavirtual.ui.theme.AulaVirtualTheme
 
 class MainActivity : ComponentActivity() {
@@ -37,17 +37,35 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
 
                     NavHost(navController, startDestination = "splash") {
-                        composable("splash") {
+                        composable(route = "splash") {
                             SplashScreen {
-                                navController.navigate("main")
+                                navController.navigate("login")
                             }
                         }
-                        composable("main") {
-                            // Replace with your main screen Composable
-                            // LoginScreen(loginScrennViewModel, navController)
-                            ProfileScreen()
-                            // ResetPasswordScreen()
+                        composable(route = "reset_password") {
+                            Log.d("ROUTER", "reset password")
+                            ResetPasswordScreen(navController)
                         }
+                        composable(route = "profile") {
+                            Log.d("ROUTER", "profile")
+                            ProfileScreen(navController)
+                        }
+                        composable(route = "pokemon/edit?pokemon_id={pokemon_id}", arguments = listOf(
+                            navArgument("pokemon_id") {
+                                type = NavType.IntType
+                                defaultValue = 0
+                            }
+                        ), content = { entry ->
+                            println("++++++++++++++++++++++++++++++++++++")
+                            val pokemonId = entry.arguments?.getInt("pokemon_id")!!
+                            println(pokemonId)
+                            PokemonScreen(navController, pokemonId!!)
+                        })
+                        composable(route = "login") {
+                            Log.d("ROUTER", "login")
+                            LoginScreen(loginScrennViewModel, navController)
+                        }
+
                     }
                 }
             }

@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
 
 class LoginScreenViewModel: ViewModel() {
     var user: String by mutableStateOf("")
@@ -12,9 +13,12 @@ class LoginScreenViewModel: ViewModel() {
     var bottomSheetCollapse: Boolean by mutableStateOf(true)
     var termsAndConditionsChecked: Boolean by mutableStateOf(false)
 
-    fun access(): Unit{
+    fun access(navController: NavController): Unit{
         println("BTN PRESSED")
         println(user)
         println(password)
+        if(user == "admin" && password == "123"){
+            navController.navigate("profile")
+        }
     }
 }
