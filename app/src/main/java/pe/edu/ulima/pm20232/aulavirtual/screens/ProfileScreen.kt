@@ -1,5 +1,6 @@
 package pe.edu.ulima.pm20232.aulavirtual.screens
 
+import android.app.Instrumentation
 import android.content.*
 import android.database.Cursor
 import android.graphics.Bitmap
@@ -11,6 +12,7 @@ import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -36,6 +38,7 @@ import coil.request.ImageRequest
 import coil.request.SuccessResult
 import coil.transform.CircleCropTransformation
 import kotlinx.coroutines.launch
+import pe.edu.ulima.pm20232.aulavirtual.AdminActivity
 import pe.edu.ulima.pm20232.aulavirtual.models.Pokemon
 import pe.edu.ulima.pm20232.aulavirtual.screenmodels.ProfileScreenViewModel
 import pe.edu.ulima.pm20232.aulavirtual.services.PokemonService
@@ -96,6 +99,13 @@ fun ProfileScreen(navController: NavController, viewModel: ProfileScreenViewMode
 
     val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()){uri: Uri? ->
         imageUri = uri
+    }
+
+    val launcherActivity = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+        // Handle the result here
+        val resultCode = result.resultCode
+        val data = result.data
+        // Handle the result as needed
     }
 
     val launcherImage = rememberLauncherForActivityResult(
@@ -245,6 +255,24 @@ fun ProfileScreen(navController: NavController, viewModel: ProfileScreenViewMode
             ){
                 Text(
                     "Compartir en Facebook",
+                )
+            }
+        }
+
+        Row(){
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 1.dp, /*start = 40.dp, end = 40.dp*/),
+                onClick = {
+                    val intent = Intent(context, AdminActivity::class.java)
+                    intent.putExtra("key", "value")
+                    launcherActivity.launch(intent)
+                },
+                //colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)) ,
+            ){
+                Text(
+                    "Ir a otro activity",
                 )
             }
         }
