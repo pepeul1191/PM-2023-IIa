@@ -1,15 +1,18 @@
 package pe.edu.ulima.pm20232.aulavirtual.screens
 
-import android.content.Intent
+import android.content.*
+import android.database.Cursor
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
+import android.icu.text.SimpleDateFormat
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -19,18 +22,28 @@ import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.FileProvider
+import androidx.core.graphics.drawable.toBitmap
 import androidx.navigation.NavController
+import coil.ImageLoader
 import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
+import coil.request.SuccessResult
 import coil.transform.CircleCropTransformation
+import kotlinx.coroutines.launch
 import pe.edu.ulima.pm20232.aulavirtual.models.Pokemon
 import pe.edu.ulima.pm20232.aulavirtual.screenmodels.ProfileScreenViewModel
 import pe.edu.ulima.pm20232.aulavirtual.services.PokemonService
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStream
+import java.util.*
 
 @Composable
 fun ImageView(url: String, height: Int, width: Int, viewModel: ProfileScreenViewModel) {
@@ -75,8 +88,7 @@ fun PokemonsGrid(navController: NavController){
 }
 
 @Composable
-fun ProfileScreen( navController: NavController, viewModel: ProfileScreenViewModel, launcher: ActivityResultLauncher<Intent>
-){
+fun ProfileScreen(navController: NavController, viewModel: ProfileScreenViewModel){
     val imageUrl = "https://pokefanaticos.com/pokedex/assets/images/pokemon_imagenes/25.png"
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     val context = LocalContext.current
@@ -85,6 +97,13 @@ fun ProfileScreen( navController: NavController, viewModel: ProfileScreenViewMod
     val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()){uri: Uri? ->
         imageUri = uri
     }
+
+    val launcherImage = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult(),
+        onResult = {
+            Log.d("POKEMON_DETAIL_SCREEN", "onResult")
+        }
+    )
 
     if (imageUri == null){
         val uri = Uri.parse(imageUrl)
@@ -112,33 +131,124 @@ fun ProfileScreen( navController: NavController, viewModel: ProfileScreenViewMod
                 Image(
                     bitmap = btm.asImageBitmap(),
                     contentDescription = null,
-                    modifier = Modifier.size(400.dp).padding(20.dp)
+                    modifier = Modifier
+                        .size(400.dp)
+                        .padding(20.dp)
                 )
             }
         }
     }
+    Column(){
+        Row(){
+            Button(
+                onClick = {
+                    launcher.launch("image/*")
+                },
+                modifier = Modifier.padding(8.dp)
+            ) {
+                Text(text = "Seleccionar Imagen", fontSize = 16.sp)
+            }
+            Button(
+                onClick = {
+                    imageUri= null
+                },
+                modifier = Modifier.padding(8.dp)
+            ) {
+                Text(text = "Borrar Imagen", fontSize = 16.sp)
+            }
+            Button(
+                onClick = {
+                    // Create an intent to send the image to WhatsApp
+                    /*
+                    context.startActivity(
+                        // on below line we are opening the intent.
+                        Intent(
+                            // on below line we are calling
+                            // uri to parse the data
+                            Intent.ACTION_VIEW,
+                            Uri.parse(
+                                // on below line we are passing uri,
+                                // message and whats app phone number.
+                                java.lang.String.format(
+                                    "https://api.whatsapp.com/send?phone=%s&text=%s",
+                                    "993907419",
+                                    "Pis oe"
+                                )
+                            )
+                        )
+                    )*/
 
-    Row(){
-        Button(
-            onClick = {
-                launcher.launch("image/*")
-            },
-            modifier = Modifier.padding(8.dp)
-        ) {
-            Text(text = "Seleccionar Imagen", fontSize = 16.sp)
+                }
+            ) {
+                Text("Send Image to WhatsApp")
+            }
         }
-        Button(
-            onClick = {
-                imageUri= null
-            },
-            modifier = Modifier.padding(8.dp)
-        ) {
-            Text(text = "Borrar Imagen", fontSize = 16.sp)
+        Row(){
+            val coroutineScope = rememberCoroutineScope()
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 1.dp, /*start = 40.dp, end = 40.dp*/),
+                onClick = {
+
+                    coroutineScope.launch {
+                        val imageLoader = ImageLoader(context)
+                        var request = ImageRequest.Builder(context).data(imageUri).build()
+                        val bitmap = (imageLoader.execute(request) as SuccessResult).drawable.toBitmap()
+                        val uri = context.contentResolver.insert(
+                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI, ContentValues()
+                        )?.apply{
+                            context.contentResolver.openOutputStream(this).use{
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, it)
+                            }
+                        }
+                        val intent = Intent(Intent.ACTION_SEND)
+                        intent.type = "image/jpg"
+                        val appPackageName = "com.whatsapp"
+                        val nombre = "XD"
+                        intent.putExtra(Intent.EXTRA_TITLE, "Has seleccionado un $nombre")
+                        intent.putExtra(Intent.EXTRA_STREAM, uri)
+                        intent.putExtra(Intent.EXTRA_TEXT, "Has seleccionado un $nombre")
+                        intent.setPackage(appPackageName)
+                        launcherImage.launch(intent)
+                        if(intent.resolveActivity(context.packageManager) != null){
+                            launcherImage.launch(intent)
+                        }
+                    }
+                },
+                //colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)) ,
+            ){
+                Text(
+                    "Compartir en WhastApp",
+                )
+            }
+        }
+        Row(){
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 1.dp, /*start = 40.dp, end = 40.dp*/),
+                onClick = {
+                    val intent = Intent(Intent.ACTION_SEND)
+                    intent.type = "image/jpg"
+                    val appPackage = "com.facebook.katana"
+                    val nombre = "XD"
+                    intent.putExtra(Intent.EXTRA_TITLE, "Has seleccionado un $nombre")
+                    intent.putExtra(Intent.EXTRA_TEXT, imageUri)
+                    launcherImage.launch(intent)
+                    intent.setPackage(appPackage)
+                    if(intent.resolveActivity(context.packageManager) != null){
+                        launcherImage.launch(intent)
+                    }
+                },
+                //colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)) ,
+            ){
+                Text(
+                    "Compartir en Facebook",
+                )
+            }
         }
     }
-
-
-
     /*
     Row(
         modifier = Modifier

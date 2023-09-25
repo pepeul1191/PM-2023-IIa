@@ -1,21 +1,14 @@
 package pe.edu.ulima.pm20232.aulavirtual
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -29,20 +22,9 @@ import pe.edu.ulima.pm20232.aulavirtual.ui.theme.AulaVirtualTheme
 class MainActivity : ComponentActivity() {
     private val loginScrennViewModel by viewModels<LoginScreenViewModel>()
     private val profileScrennViewModel by viewModels<ProfileScreenViewModel>()
-    private lateinit var launcher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                val data: Intent? = result.data
-                val selectedImageUri: Uri? = data?.data
-                if (selectedImageUri != null) {
-                    profileScrennViewModel.setImageUri(selectedImageUri)
-                }
-            }
-        }
 
         setContent {
 
@@ -66,7 +48,7 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(route = "profile") {
                             Log.d("ROUTER", "profile")
-                            ProfileScreen(navController, profileScrennViewModel, launcher)
+                            ProfileScreen(navController, profileScrennViewModel)
                         }
                         composable(route = "pokemon/edit?pokemon_id={pokemon_id}", arguments = listOf(
                             navArgument("pokemon_id") {
@@ -74,32 +56,16 @@ class MainActivity : ComponentActivity() {
                                 defaultValue = 0
                             }
                         ), content = { entry ->
-                            println("++++++++++++++++++++++++++++++++++++")
                             val pokemonId = entry.arguments?.getInt("pokemon_id")!!
-                            println(pokemonId)
                             PokemonScreen(navController, pokemonId!!)
                         })
                         composable(route = "login") {
                             Log.d("ROUTER", "login")
                             LoginScreen(loginScrennViewModel, navController)
                         }
-
                     }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    AulaVirtualTheme {
-        Greeting("Android")
     }
 }
