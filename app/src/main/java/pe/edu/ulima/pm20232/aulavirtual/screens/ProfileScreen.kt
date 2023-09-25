@@ -78,8 +78,6 @@ fun PokemonsGrid(navController: NavController){
 fun ProfileScreen( navController: NavController, viewModel: ProfileScreenViewModel, launcher: ActivityResultLauncher<Intent>
 ){
     val imageUrl = "https://pokefanaticos.com/pokedex/assets/images/pokemon_imagenes/25.png"
-
-
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     val context = LocalContext.current
     val bitmap = remember { mutableStateOf<Bitmap?>(null) }
@@ -88,30 +86,58 @@ fun ProfileScreen( navController: NavController, viewModel: ProfileScreenViewMod
         imageUri = uri
     }
 
-    imageUri?.let{
-        if(Build.VERSION.SDK_INT < 28){
-            bitmap.value = MediaStore.Images.Media.getBitmap(context.contentResolver, it)
-        }else{
-            val source = ImageDecoder.createSource(context.contentResolver, it)
-            bitmap.value = ImageDecoder.decodeBitmap(source)
-        }
-        bitmap.value?.let { btm ->
-            Image(
-                bitmap = btm.asImageBitmap(),
-                contentDescription = null,
-                modifier = Modifier.size(400.dp).padding(20.dp)
-            )
+    if (imageUri == null){
+        val uri = Uri.parse(imageUrl)
+        val painter = rememberImagePainter(
+            data = uri.scheme + "://" + uri.host + uri.path + (if (uri.query != null) uri.query else ""),
+            builder = {
+                // You can apply transformations here if needed
+                transformations(CircleCropTransformation())
+            }
+        )
+        Image(
+            painter = painter,
+            contentDescription = null, // Set a proper content description if required
+            modifier = Modifier.size(200.dp, 200.dp)
+        )
+    }else{
+        imageUri?.let{
+            if(Build.VERSION.SDK_INT < 28){
+                bitmap.value = MediaStore.Images.Media.getBitmap(context.contentResolver, it)
+            }else{
+                val source = ImageDecoder.createSource(context.contentResolver, it)
+                bitmap.value = ImageDecoder.decodeBitmap(source)
+            }
+            bitmap.value?.let { btm ->
+                Image(
+                    bitmap = btm.asImageBitmap(),
+                    contentDescription = null,
+                    modifier = Modifier.size(400.dp).padding(20.dp)
+                )
+            }
         }
     }
 
-    Button(
-        onClick = {
-            launcher.launch("image/*")
-        },
-        modifier = Modifier.padding(8.dp)
-    ) {
-        Text(text = "Seleccionar Imagen", fontSize = 16.sp)
+    Row(){
+        Button(
+            onClick = {
+                launcher.launch("image/*")
+            },
+            modifier = Modifier.padding(8.dp)
+        ) {
+            Text(text = "Seleccionar Imagen", fontSize = 16.sp)
+        }
+        Button(
+            onClick = {
+                imageUri= null
+            },
+            modifier = Modifier.padding(8.dp)
+        ) {
+            Text(text = "Borrar Imagen", fontSize = 16.sp)
+        }
     }
+
+
 
     /*
     Row(
