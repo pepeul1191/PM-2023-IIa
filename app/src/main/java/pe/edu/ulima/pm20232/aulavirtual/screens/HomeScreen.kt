@@ -18,11 +18,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -41,24 +37,25 @@ import pe.edu.ulima.pm20232.aulavirtual.ui.theme.Gray1200
 @Composable
 fun ExercisesGrid(navController: NavController, model: HomeScreenViewModel){
     var intValue by remember { mutableStateOf(0) }
+    val pokemons by model.pokemons.collectAsState()
     LazyVerticalGrid(
         cells = GridCells.Fixed(4) // Specify the number of columns
     ) {
-        items(model.pokemons.size) { i ->
+        items(pokemons.size) { i ->
             Column(){
                 Image(
-                    painter = rememberImagePainter(data = model.pokemons[i].imageUrl),
-                    contentDescription = model.pokemons[i].name,
+                    painter = rememberImagePainter(data = pokemons[i].imageUrl),
+                    contentDescription = pokemons[i].name,
                     modifier = Modifier
                         .size(100.dp)
                         .padding(bottom = 10.dp)
                         .clickable {
                             //Log.d("POKEMONS", model.pokemons[i].id.toString())
-                            intValue = model.pokemons[i].id.toInt()
+                            intValue = pokemons[i].id.toInt()
                             navController.navigate("pokemon/edit?pokemon_id=${intValue}")
                         },
                 )
-                Text(model.pokemons[i].name)
+                Text(pokemons[i].name)
             }
         }
     }
@@ -75,7 +72,9 @@ fun SelectOpitions(model: HomeScreenViewModel) {
         Icons.Filled.KeyboardArrowUp
     else
         Icons.Filled.KeyboardArrowDown
-    Column() {
+    Column(
+        Modifier.padding(bottom = 20.dp)
+    ) {
         OutlinedTextField(
             value = selectedText,
             onValueChange = { selectedText = it },
