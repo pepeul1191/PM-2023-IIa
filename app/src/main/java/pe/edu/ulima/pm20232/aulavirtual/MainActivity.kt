@@ -16,12 +16,14 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import pe.edu.ulima.pm20232.aulavirtual.screenmodels.LoginScreenViewModel
 import pe.edu.ulima.pm20232.aulavirtual.screenmodels.ProfileScreenViewModel
+import pe.edu.ulima.pm20232.aulavirtual.screenmodels.HomeScreenViewModel
 import pe.edu.ulima.pm20232.aulavirtual.screens.*
 import pe.edu.ulima.pm20232.aulavirtual.ui.theme.AulaVirtualTheme
 
 class MainActivity : ComponentActivity() {
     private val loginScrennViewModel by viewModels<LoginScreenViewModel>()
     private val profileScrennViewModel by viewModels<ProfileScreenViewModel>()
+    private val homeScrennViewModel by viewModels<HomeScreenViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,11 +38,15 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val navController = rememberNavController()
 
-                    NavHost(navController, startDestination = "profile") {
+                    NavHost(navController, startDestination = "home") {
                         composable(route = "splash") {
                             SplashScreen {
                                 navController.navigate("login")
                             }
+                        }
+                        composable(route = "home") {
+                            Log.d("HOME", "home screen")
+                            HomeScreen(navController, homeScrennViewModel)
                         }
                         composable(route = "reset_password") {
                             Log.d("ROUTER", "reset password")

@@ -214,7 +214,7 @@ fun ProfileScreen(navController: NavController, viewModel: ProfileScreenViewMode
                         }
                         val intent = Intent(Intent.ACTION_SEND)
                         intent.type = "image/jpg"
-                        val appPackageName = "com.whatsapp"
+                        val appPackageName = "com.facebook.katana"
                         val nombre = "XD"
                         intent.putExtra(Intent.EXTRA_TITLE, "Has seleccionado un $nombre")
                         intent.putExtra(Intent.EXTRA_STREAM, uri)
