@@ -9,14 +9,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import pe.edu.ulima.pm20232.aulavirtual.components.BottomBar
+import pe.edu.ulima.pm20232.aulavirtual.components.BottomNavigationBar
 import pe.edu.ulima.pm20232.aulavirtual.components.TopNavigationBar
+import pe.edu.ulima.pm20232.aulavirtual.configs.BottomBarScreen
+import pe.edu.ulima.pm20232.aulavirtual.configs.TopBarScreen
 import pe.edu.ulima.pm20232.aulavirtual.screenmodels.LoginScreenViewModel
 import pe.edu.ulima.pm20232.aulavirtual.screenmodels.ProfileScreenViewModel
 import pe.edu.ulima.pm20232.aulavirtual.screenmodels.HomeScreenViewModel
@@ -41,10 +47,41 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     Scaffold(
                         topBar = {
-                            TopNavigationBar(navController)
+                            val screens: List<TopBarScreen> = listOf(
+                                TopBarScreen(
+                                    route = "home",
+                                    title = "Home",
+                                ),
+                                TopBarScreen(
+                                    route = "profile",
+                                    title = "Ver Perfíl",
+                                ),
+                                TopBarScreen(
+                                    route = "sign_out",
+                                    title = "Cerrar Sesión",
+                                ),
+                            )
+                            TopNavigationBar(navController, screens)
                         },
                         bottomBar = {
-                            BottomBar(navController = navController)
+                            val screens: List<BottomBarScreen> = listOf(
+                                BottomBarScreen(
+                                    route = "home",
+                                    title = "Home",
+                                    icon = Icons.Default.Home
+                                ),
+                                BottomBarScreen(
+                                    route = "profile",
+                                    title = "Profile",
+                                    icon = Icons.Default.Person
+                                ),
+                                BottomBarScreen(
+                                    route = "settings",
+                                    title = "Settings",
+                                    icon = Icons.Default.Settings
+                                ),
+                            )
+                            BottomNavigationBar(navController = navController, screens)
                         },
                         content = {
                             NavHost(navController, startDestination = "home") {

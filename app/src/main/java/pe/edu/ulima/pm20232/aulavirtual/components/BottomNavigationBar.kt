@@ -14,41 +14,12 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-
-sealed class BottomBarScreen(
-    val route: String,
-    val title: String,
-    val icon: ImageVector
-) {
-    object Home : BottomBarScreen(
-        route = "home",
-        title = "Home",
-        icon = Icons.Default.Home
-    )
-
-    object Profile : BottomBarScreen(
-        route = "profile",
-        title = "Profile",
-        icon = Icons.Default.Person
-    )
-
-    object Settings : BottomBarScreen(
-        route = "settings",
-        title = "Settings",
-        icon = Icons.Default.Settings
-    )
-}
+import pe.edu.ulima.pm20232.aulavirtual.configs.BottomBarScreen
 
 @Composable
-fun BottomBar(navController: NavHostController) {
-    val screens = listOf(
-        BottomBarScreen.Home,
-        BottomBarScreen.Profile,
-        BottomBarScreen.Settings,
-    )
+fun BottomNavigationBar(navController: NavHostController, screens: List<BottomBarScreen>) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-
     BottomNavigation {
         screens.forEach { screen ->
             AddItem(
