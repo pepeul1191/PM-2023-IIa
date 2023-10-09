@@ -37,25 +37,27 @@ import pe.edu.ulima.pm20232.aulavirtual.ui.theme.Gray1200
 @Composable
 fun ExercisesGrid(navController: NavController, model: HomeScreenViewModel){
     var intValue by remember { mutableStateOf(0) }
-    val pokemons by model.pokemons.collectAsState()
+    //val pokemons by model.pokemons.collectAsState()
+    val exercises by model.exercises.collectAsState()
     LazyVerticalGrid(
         cells = GridCells.Fixed(4) // Specify the number of columns
     ) {
-        items(pokemons.size) { i ->
+        items(exercises.size) { i ->
             Column(){
+                println(exercises[i].imageUrl)
                 Image(
-                    painter = rememberImagePainter(data = pokemons[i].imageUrl),
-                    contentDescription = pokemons[i].name,
+                    painter = rememberImagePainter(data = exercises[i].imageUrl),
+                    contentDescription = exercises[i].name,
                     modifier = Modifier
                         .size(100.dp)
                         .padding(bottom = 10.dp)
                         .clickable {
                             //Log.d("POKEMONS", model.pokemons[i].id.toString())
-                            intValue = pokemons[i].id.toInt()
+                            intValue = exercises[i].id.toInt()
                             navController.navigate("pokemon/edit?pokemon_id=${intValue}")
                         },
                 )
-                Text(pokemons[i].name)
+                Text(exercises[i].name)
             }
         }
     }
@@ -85,7 +87,7 @@ fun SelectOpitions(model: HomeScreenViewModel) {
                     //This value is used to assign to the DropDown the same width
                     textfieldSize = coordinates.size.toSize()
                 },
-            label = {Text("Lista de Generaciones")},
+            label = {Text("Lista de Partes del Cuerpo")},
             trailingIcon = {
                 Icon(icon,"contentDescription",
                     Modifier.clickable { expanded = !expanded })
@@ -102,9 +104,9 @@ fun SelectOpitions(model: HomeScreenViewModel) {
             modifier = Modifier
                 .width(with(LocalDensity.current){textfieldSize.width.toDp()})
         ) {
-            for ((key, value) in model.generationsMap) {
+            for ((key, value) in model.bodyPartsMap) {
                 DropdownMenuItem(onClick = {
-                    model.filterByGenerations(key)
+                    model.filterByBodyParts(key)
                     selectedText = value
                     expanded = false
                 }) {
@@ -119,6 +121,8 @@ fun SelectOpitions(model: HomeScreenViewModel) {
 fun HomeScreen(navController: NavController, model: HomeScreenViewModel){
     model.listAll()
     model.getGenerations()
+    model.getBodyParts()
+    model.listAllExercises()
     Column(
         modifier = Modifier
             .fillMaxWidth()

@@ -34,6 +34,5 @@ class UserService {
         userList.add(User(id = 26, user = "20162609", password = "12326", memberId = 26))
         userList.add(User(id = 27, user = "20172768", password = "12327", memberId = 27))
         userList.add(User(id = 28, user = "20183460", password = "12328", memberId = 28))
-
     }
 }
