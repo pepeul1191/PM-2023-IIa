@@ -15,6 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import pe.edu.ulima.pm20232.aulavirtual.components.BottomBar
 import pe.edu.ulima.pm20232.aulavirtual.components.TopNavigationBar
 import pe.edu.ulima.pm20232.aulavirtual.screenmodels.LoginScreenViewModel
 import pe.edu.ulima.pm20232.aulavirtual.screenmodels.ProfileScreenViewModel
@@ -41,6 +42,9 @@ class MainActivity : ComponentActivity() {
                     Scaffold(
                         topBar = {
                             TopNavigationBar(navController)
+                        },
+                        bottomBar = {
+                            BottomBar(navController = navController)
                         },
                         content = {
                             NavHost(navController, startDestination = "home") {
