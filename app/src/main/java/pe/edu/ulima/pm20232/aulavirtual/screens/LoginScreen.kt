@@ -140,6 +140,7 @@ fun LoginForm(
                         },
                         isPassword = true,
                     )
+                    Text1(viewModel.message)
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()

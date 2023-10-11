@@ -35,4 +35,14 @@ class UserService {
         userList.add(User(id = 27, user = "20172768", password = "12327", memberId = 27))
         userList.add(User(id = 28, user = "20183460", password = "12328", memberId = 28))
     }
+
+    fun checkUser(userName: String, password: String): Int{
+        var resp: Int = 0
+        userList.forEach{user ->
+            if(user.user == userName && user.password == password){
+                resp = user.id
+            }
+        }
+        return resp
+    }
 }
