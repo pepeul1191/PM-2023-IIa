@@ -1,7 +1,10 @@
 package pe.edu.ulima.pm20232.aulavirtual.services
 
 import pe.edu.ulima.pm20232.aulavirtual.models.Pokemon
+import retrofit2.Call
+import retrofit2.http.GET
 
+/*
 class PokemonService {
     var pokemonList: ArrayList<Pokemon> = ArrayList<Pokemon>()
 
@@ -61,4 +64,9 @@ class PokemonService {
         }
         return reducedList
     }
+}
+ */
+interface PokemonService {
+    @GET("pokemon/list") // Reemplaza con la URL de tu punto final
+    fun fetchAll(): Call<List<Pokemon>>
 }

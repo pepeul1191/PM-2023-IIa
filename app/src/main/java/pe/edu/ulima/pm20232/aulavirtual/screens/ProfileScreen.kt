@@ -67,6 +67,7 @@ fun ImageView(url: String, height: Int, width: Int, viewModel: ProfileScreenView
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PokemonsGrid(navController: NavController){
+    /*
     val pokemonService: PokemonService = PokemonService()
     val pokemons: List<Pokemon> = pokemonService.pokemonList
     var intValue by remember { mutableStateOf(0) }
@@ -88,6 +89,7 @@ fun PokemonsGrid(navController: NavController){
             )
         }
     }
+    */
 }
 
 @Composable

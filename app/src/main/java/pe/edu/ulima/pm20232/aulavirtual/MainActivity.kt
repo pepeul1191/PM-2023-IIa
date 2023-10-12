@@ -34,9 +34,7 @@ import pe.edu.ulima.pm20232.aulavirtual.components.BottomNavigationBar
 import pe.edu.ulima.pm20232.aulavirtual.components.TopNavigationBar
 import pe.edu.ulima.pm20232.aulavirtual.configs.BottomBarScreen
 import pe.edu.ulima.pm20232.aulavirtual.configs.TopBarScreen
-import pe.edu.ulima.pm20232.aulavirtual.screenmodels.LoginScreenViewModel
-import pe.edu.ulima.pm20232.aulavirtual.screenmodels.ProfileScreenViewModel
-import pe.edu.ulima.pm20232.aulavirtual.screenmodels.HomeScreenViewModel
+import pe.edu.ulima.pm20232.aulavirtual.screenmodels.*
 import pe.edu.ulima.pm20232.aulavirtual.screens.*
 import pe.edu.ulima.pm20232.aulavirtual.ui.theme.AulaVirtualTheme
 
@@ -44,6 +42,7 @@ class MainActivity : ComponentActivity() {
     private val loginScrennViewModel by viewModels<LoginScreenViewModel>()
     private val profileScrennViewModel by viewModels<ProfileScreenViewModel>()
     private val homeScrennViewModel by viewModels<HomeScreenViewModel>()
+    private val pokemonDetailScrennViewModel by viewModels<PokemonDetailScreenViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +70,10 @@ class MainActivity : ComponentActivity() {
                                     TopBarScreen(
                                         route = "profile",
                                         title = "Ver Perfíl",
+                                    ),
+                                    TopBarScreen(
+                                        route = "pokemon",
+                                        title = "Ver Pokemones",
                                     ),
                                     TopBarScreen(
                                         route = "sign_out",
@@ -170,6 +173,10 @@ class MainActivity : ComponentActivity() {
                                     Log.d("HOME", "home screen")
                                     HomeScreen(navController, homeScrennViewModel)
                                 }
+                                composable(route = "pokemon") {
+                                    Log.d("POKEMON", "pokemons screen")
+                                    PokemonScreen(navController)
+                                }
                                 composable(route = "reset_password") {
                                     Log.d("ROUTER", "reset password")
                                     ResetPasswordScreen(navController)
@@ -185,7 +192,8 @@ class MainActivity : ComponentActivity() {
                                     }
                                 ), content = { entry ->
                                     val pokemonId = entry.arguments?.getInt("pokemon_id")!!
-                                    PokemonScreen(navController, pokemonId!!)
+                                    pokemonDetailScrennViewModel.pokemonId = pokemonId
+                                    PokemonDetailScreen(navController, pokemonDetailScrennViewModel)
                                 })
                                 composable(route = "login") {
                                     Log.d("ROUTER", "login")

@@ -24,9 +24,9 @@ class HomeScreenViewModel: ViewModel(){
     }
 
     fun listAll(){
-        val pokemonService: PokemonService = PokemonService()
-        val list = pokemonService.listAll()
-        setPokemons(list)
+        //val pokemonService: PokemonService = PokemonService()
+        //val list = pokemonService.listAll()
+        //setPokemons(list)
     }
 
     fun getGenerations(){
@@ -39,12 +39,13 @@ class HomeScreenViewModel: ViewModel(){
         }
     }
 
+    /*
     fun filterByGenerations(generationId: Int){
         val pokemonService: PokemonService = PokemonService()
         val list = pokemonService.pokemonListByGenerationId(generationId)
         setPokemons(list)
     }
-
+    */
     // TRABAJO
 
     val bodyPartsMap = mutableMapOf<Int, String>()
