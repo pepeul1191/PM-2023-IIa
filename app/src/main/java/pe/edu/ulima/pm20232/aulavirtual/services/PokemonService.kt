@@ -3,6 +3,7 @@ package pe.edu.ulima.pm20232.aulavirtual.services
 import pe.edu.ulima.pm20232.aulavirtual.models.Pokemon
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 /*
 class PokemonService {
@@ -68,5 +69,7 @@ class PokemonService {
  */
 interface PokemonService {
     @GET("pokemon/list") // Reemplaza con la URL de tu punto final
-    fun fetchAll(): Call<List<Pokemon>>
+    fun fetchAll(
+        @Query("generation_id") generationId: Int? = null,
+    ): Call<List<Pokemon>>
 }
