@@ -31,23 +31,7 @@ class PokemonScreenViewModel: ViewModel() {
     val generationsMap = mutableMapOf<Int, String>()
 
     fun fetchAll(){
-        coroutine.launch {
-            try {
-                withContext(Dispatchers.IO) {
-                    val response = pokemonService.fetchAll().execute()
-                    if (response.isSuccessful) {
-                        val list: List<Pokemon> = response.body()!!
-                        setPokemons(list)
-                    } else {
-                        // Maneja errores
-                    }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            } finally {
 
-            }
-        }
     }
 
     fun fetchGenerations(){

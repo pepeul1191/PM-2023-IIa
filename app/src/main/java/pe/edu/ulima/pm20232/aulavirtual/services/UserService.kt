@@ -1,6 +1,11 @@
 package pe.edu.ulima.pm20232.aulavirtual.services
 
 import pe.edu.ulima.pm20232.aulavirtual.models.User
+import retrofit2.Call
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
+import retrofit2.http.POST
+
 
 class UserService {
     var userList: ArrayList<User> = ArrayList<User>()
@@ -45,4 +50,13 @@ class UserService {
         }
         return resp
     }
+}
+
+interface UserService2 {
+    @FormUrlEncoded
+    @POST("user/validate")
+    fun findOne(
+        @Field("user") name: String?,
+        @Field("password") age: String?
+    ): Call<Int?>?
 }
