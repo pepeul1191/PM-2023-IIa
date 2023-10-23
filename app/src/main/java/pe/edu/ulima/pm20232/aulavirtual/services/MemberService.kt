@@ -21,5 +21,6 @@ interface MemberService {
     @GET("member/exercises") // Reemplaza con la URL de tu punto final
     fun exercises(
         @Query("member_id") memberId: Int? = null,
+        @Query("body_part_id") bodyPartId: Int? = null,
     ): Call<List<Exercise>>
 }

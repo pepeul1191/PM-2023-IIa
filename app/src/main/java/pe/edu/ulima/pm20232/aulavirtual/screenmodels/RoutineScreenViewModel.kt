@@ -16,6 +16,7 @@ import pe.edu.ulima.pm20232.aulavirtual.models.BodyPart
 import pe.edu.ulima.pm20232.aulavirtual.models.Exercise
 import pe.edu.ulima.pm20232.aulavirtual.models.responses.BodyPartExercisesCount
 import pe.edu.ulima.pm20232.aulavirtual.services.*
+import retrofit2.Response
 
 class RoutineScreenViewModel(): ViewModel(){
     private val memberService = BackendClient.buildService(MemberService::class.java)
@@ -76,11 +77,16 @@ class RoutineScreenViewModel(): ViewModel(){
         }
     }
 
-    fun fetchExercieses(){
+    fun fetchExercieses(bodyPartId: Int? = null){
         coroutine.launch {
             try {
                 withContext(Dispatchers.IO) {
-                    val response = memberService.exercises(memberId).execute()
+                    val response: Response<List<Exercise>>
+                    if(bodyPartId == null || bodyPartId == 0){
+                        response = memberService.exercises(memberId).execute()
+                    }else{
+                        response = memberService.exercises(memberId, bodyPartId).execute()
+                    }
                     if (response.isSuccessful) {
                         val list: List<Exercise> = response.body()!!
                         setExercises(list)
@@ -94,11 +100,5 @@ class RoutineScreenViewModel(): ViewModel(){
 
             }
         }
-    }
-
-    fun filterByBodyParts(bodyPartId: Int){
-        val service: ExerciseService = ExerciseService()
-        val list = service.exerciseListByBodyPartId(bodyPartId)
-        setExercises(list)
     }
 }

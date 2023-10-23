@@ -106,9 +106,16 @@ fun SelectOpitionsRoutine(model: RoutineScreenViewModel) {
             modifier = Modifier
                 .width(with(LocalDensity.current){textfieldSize.width.toDp()})
         ) {
+            DropdownMenuItem(onClick = {
+                model.fetchExercieses(0)
+                selectedText = "VER TODO"
+                expanded = false
+            }) {
+                Text(text = "VER TODO")
+            }
             for ((key, value) in model.bodyPartMap) {
                 DropdownMenuItem(onClick = {
-                    model.filterByBodyParts(key)
+                    model.fetchExercieses(key)
                     selectedText = value
                     expanded = false
                 }) {
