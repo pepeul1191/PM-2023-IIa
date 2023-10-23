@@ -56,7 +56,7 @@ fun RoutineGrid(navController: NavController, model: RoutineScreenViewModel){
                         .size(100.dp)
                         .padding(bottom = 10.dp)
                         .clickable {
-
+                            model.fetchExercise(exercises[i].id)
                         },
                 )
                 Text(exercises[i].name)

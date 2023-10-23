@@ -15,6 +15,7 @@ import pe.edu.ulima.pm20232.aulavirtual.configs.BackendClient
 import pe.edu.ulima.pm20232.aulavirtual.models.BodyPart
 import pe.edu.ulima.pm20232.aulavirtual.models.Exercise
 import pe.edu.ulima.pm20232.aulavirtual.models.responses.BodyPartExercisesCount
+import pe.edu.ulima.pm20232.aulavirtual.models.responses.ExerciseSetReps
 import pe.edu.ulima.pm20232.aulavirtual.services.*
 import retrofit2.Response
 
@@ -90,6 +91,26 @@ class RoutineScreenViewModel(): ViewModel(){
                     if (response.isSuccessful) {
                         val list: List<Exercise> = response.body()!!
                         setExercises(list)
+                    } else {
+                        // Maneja errores
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+
+            }
+        }
+    }
+
+    fun fetchExercise(exerciseId: Int){
+        coroutine.launch {
+            try {
+                withContext(Dispatchers.IO) {
+                    val response = memberService.exercise(memberId, exerciseId).execute()
+                    if (response.isSuccessful) {
+                        val exercise: ExerciseSetReps = response.body()!!
+                        println(exercise.toString())
                     } else {
                         // Maneja errores
                     }
