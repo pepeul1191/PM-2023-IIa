@@ -1,5 +1,6 @@
 package pe.edu.ulima.pm20232.aulavirtual.services
 
+import pe.edu.ulima.pm20232.aulavirtual.configs.HttpStdResponse
 import pe.edu.ulima.pm20232.aulavirtual.models.User
 import retrofit2.Call
 import retrofit2.http.Field
@@ -58,5 +59,5 @@ interface UserService2 {
     fun findOne(
         @Field("user") name: String?,
         @Field("password") age: String?
-    ): Call<Int?>?
+    ): Call<HttpStdResponse?>?
 }

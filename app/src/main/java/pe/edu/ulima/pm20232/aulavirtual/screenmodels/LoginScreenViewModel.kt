@@ -36,12 +36,8 @@ class LoginScreenViewModel: ViewModel() {
                 withContext(Dispatchers.IO) {
                     val response = userService.findOne(user, password)?.execute()
                     if (response != null) {
-                        if (response.body() != 1) {
-                            val userId = response.body()!!
-                            println("userId: " + userId)
-                        } else {
-                            // Maneja errores
-                        }
+                        println(response.body())
+
                     }
                 }
             } catch (e: Exception) {
