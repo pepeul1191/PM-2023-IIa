@@ -49,9 +49,6 @@ fun RoutineGrid(navController: NavController, model: RoutineScreenViewModel){
     ) {
         items(exercises.size) { i ->
             Column(){
-                println(" +++++++++++++++++++++++++++++++++")
-                println(BASE_URL + exercises[i].imageUrl)
-                println(exercises[i].imageUrl)
                 Image(
                     painter = rememberImagePainter(data = BASE_URL + exercises[i].imageUrl),
                     contentDescription = exercises[i].name,
@@ -59,9 +56,7 @@ fun RoutineGrid(navController: NavController, model: RoutineScreenViewModel){
                         .size(100.dp)
                         .padding(bottom = 10.dp)
                         .clickable {
-                            //Log.d("POKEMONS", model.pokemons[i].id.toString())
-                            intValue = exercises[i].id.toInt()
-                            navController.navigate("pokemon/edit?pokemon_id=${intValue}")
+
                         },
                 )
                 Text(exercises[i].name)

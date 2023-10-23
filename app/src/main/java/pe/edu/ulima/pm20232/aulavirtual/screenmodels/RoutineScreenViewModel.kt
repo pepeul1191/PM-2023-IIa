@@ -26,6 +26,7 @@ class RoutineScreenViewModel(): ViewModel(){
     var bodyPartsCount: Int by mutableStateOf(0)
     var exercisesCount: Int by mutableStateOf(0)
     val bodyPartMap = mutableMapOf<Int, String>()
+    val bodyPartFlow = MutableStateFlow(bodyPartMap.toMap())
     private var _exercises = MutableStateFlow<List<Exercise>>(emptyList())
     val exercises: StateFlow<List<Exercise>> get() = _exercises
     fun setExercises(newItems: List<Exercise>) {
@@ -39,7 +40,6 @@ class RoutineScreenViewModel(): ViewModel(){
                     val response = memberService.exercisesBodyParts(memberId).execute()
                     if (response.isSuccessful) {
                         val response: BodyPartExercisesCount = response.body()!!
-                        println(response)
                         bodyPartsCount = response.bodyParts
                         exercisesCount = response.exercises
                     } else {
@@ -61,8 +61,8 @@ class RoutineScreenViewModel(): ViewModel(){
                     val response = memberService.bodyParts(memberId).execute()
                     if (response.isSuccessful) {
                         val list: List<BodyPart> = response.body()!!
-                        for(g: BodyPart in list){
-                            bodyPartMap[g.id] = g.name
+                        for(i: BodyPart in list){
+                            bodyPartMap[i.id] = i.name
                         }
                     } else {
                         // Maneja errores
