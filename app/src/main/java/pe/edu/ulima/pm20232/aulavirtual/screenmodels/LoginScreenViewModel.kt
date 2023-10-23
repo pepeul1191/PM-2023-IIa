@@ -3,6 +3,7 @@ package pe.edu.ulima.pm20232.aulavirtual.screenmodels
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import android.content.Context
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,12 +13,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import pe.edu.ulima.pm20232.aulavirtual.configs.BackendClient
-import pe.edu.ulima.pm20232.aulavirtual.models.Generation
-import pe.edu.ulima.pm20232.aulavirtual.services.GenerationService
-import pe.edu.ulima.pm20232.aulavirtual.services.UserService
+import android.content.SharedPreferences
 import pe.edu.ulima.pm20232.aulavirtual.services.UserService2
+import org.json.JSONObject
+import pe.edu.ulima.pm20232.aulavirtual.configs.HttpStdResponse
+import pe.edu.ulima.pm20232.aulavirtual.configs.PreferencesManager
+import java.util.concurrent.Flow
 
-class LoginScreenViewModel: ViewModel() {
+
+class LoginScreenViewModel(): ViewModel() {
+    lateinit var preferencesManager: PreferencesManager
     var user: String by mutableStateOf("")
     var password: String by mutableStateOf("")
     var message: String by mutableStateOf("")
@@ -31,13 +36,27 @@ class LoginScreenViewModel: ViewModel() {
         println("BTN PRESSED")
         println(user)
         println(password)
+        println("BTN PRESSED")
+        println(user)
+        println(password)
         coroutine.launch {
             try {
                 withContext(Dispatchers.IO) {
                     val response = userService.findOne(user, password)?.execute()
                     if (response != null) {
-                        println(response.body())
-
+                        if (response.body()!!.success == true) {
+                            val responseData = response.body()!!
+                            val jsonData = JSONObject(responseData.data)
+                            val userId = jsonData.getInt("user_id")
+                            val memberId = jsonData.getInt("member_id")
+                            println("routine?user_id=${userId}&member_id=${memberId}")
+                            launch(Dispatchers.Main) {
+                                navController.navigate("routine?user_id=${userId}&member_id=${memberId}")
+                            }
+                        } else {
+                            // Maneja errores
+                            message = response.body()!!.message
+                        }
                     }
                 }
             } catch (e: Exception) {

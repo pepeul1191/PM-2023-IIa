@@ -1,5 +1,7 @@
 package pe.edu.ulima.pm20232.aulavirtual.screens
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -33,6 +35,7 @@ import pe.edu.ulima.pm20232.aulavirtual.R
 import pe.edu.ulima.pm20232.aulavirtual.components.ButtonWithIcon
 import pe.edu.ulima.pm20232.aulavirtual.components.CheckboxWithLabel
 import pe.edu.ulima.pm20232.aulavirtual.components.TextFieldWithLeadingIcon
+import pe.edu.ulima.pm20232.aulavirtual.configs.PreferencesManager
 import pe.edu.ulima.pm20232.aulavirtual.screenmodels.LoginScreenViewModel
 import pe.edu.ulima.pm20232.aulavirtual.ui.theme.*
 import java.net.URL

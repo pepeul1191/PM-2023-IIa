@@ -1,5 +1,6 @@
 package pe.edu.ulima.pm20232.aulavirtual
 
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -21,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.Image
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -33,18 +35,26 @@ import coil.transform.CircleCropTransformation
 import pe.edu.ulima.pm20232.aulavirtual.components.BottomNavigationBar
 import pe.edu.ulima.pm20232.aulavirtual.components.TopNavigationBar
 import pe.edu.ulima.pm20232.aulavirtual.configs.BottomBarScreen
+import pe.edu.ulima.pm20232.aulavirtual.configs.PreferencesManager
 import pe.edu.ulima.pm20232.aulavirtual.configs.TopBarScreen
 import pe.edu.ulima.pm20232.aulavirtual.screenmodels.*
 import pe.edu.ulima.pm20232.aulavirtual.screens.*
 import pe.edu.ulima.pm20232.aulavirtual.ui.theme.AulaVirtualTheme
 
 class MainActivity : ComponentActivity() {
+    private lateinit var preferencesManager: PreferencesManager
     private val loginScrennViewModel by viewModels<LoginScreenViewModel>()
     private val profileScrennViewModel by viewModels<ProfileScreenViewModel>()
     private val homeScrennViewModel by viewModels<HomeScreenViewModel>()
     private val pokemonDetailScrennViewModel by viewModels<PokemonDetailScreenViewModel>()
+    private val routineScreenViewModel by viewModels<RoutineScreenViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        preferencesManager = PreferencesManager(applicationContext)
+        // set preferencesManager in viewModels
+        loginScrennViewModel.preferencesManager = preferencesManager
+        profileScrennViewModel.preferencesManager = preferencesManager
+
         super.onCreate(savedInstanceState)
 
         setContent {
@@ -185,6 +195,25 @@ class MainActivity : ComponentActivity() {
                                     Log.d("ROUTER", "profile")
                                     ProfileScreen(navController, profileScrennViewModel)
                                 }
+                                composable(route = "routine?user_id={user_id}&member_id={member_id}", arguments = listOf(
+                                    navArgument("user_id") {
+                                        type = NavType.IntType
+                                        defaultValue = 0
+                                    },
+                                    navArgument("member_id") {
+                                        type = NavType.IntType
+                                        defaultValue = 0
+                                    }
+                                ), content = { entry ->
+                                    val memberId = entry.arguments?.getInt("member_id")!!
+                                    val userId = entry.arguments?.getInt("user_id")!!
+                                    routineScreenViewModel.memberId = memberId
+                                    routineScreenViewModel.userId = userId
+                                    routineScreenViewModel.fetchBodyPartsExercises()
+                                    routineScreenViewModel.fetchBodyParts()
+                                    routineScreenViewModel.fetchExercieses()
+                                    RoutineScreen(routineScreenViewModel, navController)
+                                })
                                 composable(route = "pokemon/edit?pokemon_id={pokemon_id}", arguments = listOf(
                                     navArgument("pokemon_id") {
                                         type = NavType.IntType

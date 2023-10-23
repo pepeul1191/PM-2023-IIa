@@ -116,7 +116,7 @@ fun ProfileScreen(navController: NavController, viewModel: ProfileScreenViewMode
             Log.d("POKEMON_DETAIL_SCREEN", "onResult")
         }
     )
-
+    viewModel.loadUserId()
     if (imageUri == null){
         val uri = Uri.parse(imageUrl)
         val painter = rememberImagePainter(
@@ -256,7 +256,7 @@ fun ProfileScreen(navController: NavController, viewModel: ProfileScreenViewMode
                 //colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF4CAF50)) ,
             ){
                 Text(
-                    "Compartir en Facebook",
+                    "Compartir en Facebook ${viewModel.userId}",
                 )
             }
         }
