@@ -44,6 +44,11 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+    kotlinOptions {
+        freeCompilerArgs += [
+                "-Xjvm-default=all",
+        ]
+    }
 }
 
 dependencies {
@@ -74,4 +79,6 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:2.9.0"
     // local storage
     implementation "androidx.datastore:datastore-preferences:1.0.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:2.4.0" // Usa la versión más reciente disponible
+
 }

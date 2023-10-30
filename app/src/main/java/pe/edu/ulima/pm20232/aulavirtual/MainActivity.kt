@@ -16,12 +16,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.Image
+import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
@@ -37,13 +34,17 @@ import pe.edu.ulima.pm20232.aulavirtual.components.TopNavigationBar
 import pe.edu.ulima.pm20232.aulavirtual.configs.BottomBarScreen
 import pe.edu.ulima.pm20232.aulavirtual.configs.PreferencesManager
 import pe.edu.ulima.pm20232.aulavirtual.configs.TopBarScreen
+import pe.edu.ulima.pm20232.aulavirtual.factories.LoginScreenViewModelFactory
 import pe.edu.ulima.pm20232.aulavirtual.screenmodels.*
 import pe.edu.ulima.pm20232.aulavirtual.screens.*
+import pe.edu.ulima.pm20232.aulavirtual.storages.UserStorage
 import pe.edu.ulima.pm20232.aulavirtual.ui.theme.AulaVirtualTheme
 
 class MainActivity : ComponentActivity() {
     private lateinit var preferencesManager: PreferencesManager
-    private val loginScrennViewModel by viewModels<LoginScreenViewModel>()
+    private val loginScrennViewModel: LoginScreenViewModel by viewModels {
+        LoginScreenViewModelFactory(applicationContext)
+    }
     private val profileScrennViewModel by viewModels<ProfileScreenViewModel>()
     private val homeScrennViewModel by viewModels<HomeScreenViewModel>()
     private val pokemonDetailScrennViewModel by viewModels<PokemonDetailScreenViewModel>()
@@ -52,7 +53,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         preferencesManager = PreferencesManager(applicationContext)
         // set preferencesManager in viewModels
-        loginScrennViewModel.preferencesManager = preferencesManager
         profileScrennViewModel.preferencesManager = preferencesManager
 
         super.onCreate(savedInstanceState)
@@ -226,7 +226,22 @@ class MainActivity : ComponentActivity() {
                                 })
                                 composable(route = "login") {
                                     Log.d("ROUTER", "login")
-                                    LoginScreen(loginScrennViewModel, navController)
+                                    val dataStore = UserStorage(applicationContext)
+                                    if(dataStore.getUserId.collectAsState(initial = 9999).value != 0){
+                                        val userId = dataStore.getUserId.collectAsState(initial = 0).value
+                                        val memberId = userId
+                                        Log.d("ROUTER", dataStore.getUserId.collectAsState(initial = 0).value.toString())
+                                        if (userId != null && memberId != null){
+                                            routineScreenViewModel.memberId = userId
+                                            routineScreenViewModel.userId = userId
+                                            routineScreenViewModel.fetchBodyPartsExercises()
+                                            routineScreenViewModel.fetchBodyParts()
+                                            routineScreenViewModel.fetchExercieses()
+                                            RoutineScreen(routineScreenViewModel, navController)
+                                        }
+                                    }else{
+                                        LoginScreen(loginScrennViewModel, navController)
+                                    }
                                 }
                             }
                         }

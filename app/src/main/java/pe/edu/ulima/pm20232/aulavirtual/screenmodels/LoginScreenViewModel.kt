@@ -18,11 +18,11 @@ import pe.edu.ulima.pm20232.aulavirtual.services.UserService2
 import org.json.JSONObject
 import pe.edu.ulima.pm20232.aulavirtual.configs.HttpStdResponse
 import pe.edu.ulima.pm20232.aulavirtual.configs.PreferencesManager
+import pe.edu.ulima.pm20232.aulavirtual.storages.UserStorage
 import java.util.concurrent.Flow
 
 
-class LoginScreenViewModel(): ViewModel() {
-    lateinit var preferencesManager: PreferencesManager
+class LoginScreenViewModel(private val context: Context): ViewModel() {
     var user: String by mutableStateOf("")
     var password: String by mutableStateOf("")
     var message: String by mutableStateOf("")
@@ -31,6 +31,7 @@ class LoginScreenViewModel(): ViewModel() {
 
     private val userService = BackendClient.buildService(UserService2::class.java)
     private val coroutine: CoroutineScope = viewModelScope
+    val dataStore = UserStorage(context)
 
     fun access(navController: NavController): Unit{
         println("BTN PRESSED")
@@ -49,6 +50,8 @@ class LoginScreenViewModel(): ViewModel() {
                             val jsonData = JSONObject(responseData.data)
                             val userId = jsonData.getInt("user_id")
                             val memberId = jsonData.getInt("member_id")
+                            // localstorage
+                            dataStore.saveUserId(userId)
                             println("routine?user_id=${userId}&member_id=${memberId}")
                             launch(Dispatchers.Main) {
                                 navController.navigate("routine?user_id=${userId}&member_id=${memberId}")
